@@ -1,29 +1,32 @@
 # Database Modeling
 ## Requirements
-Boat 
-- Every boat has a name. ✓
-- Names are long, not always unique.  
-- Every boat has a country.
-- Every boat has a unique country identifier.
-- Every boat has a year of registration.
-- Any boat with fixed VHF radio must have a MMSI id
+Boat
+- Every boat has a name. ✓ 
+- Names are long, not always unique. ✓
+- Every boat has a country. (removed)✓
+- Every boat has a unique country identifier. ✓
+- Every boat has a year of registration. ✓
+- Any boat with fixed VHF radio must have a MMSI id ✓
 ---mine---
-- Every boat has a owner, may not be unique.
-- Every boat has a flag of the country of registration.
-
-Sailor ("Eye eye Capitan") 
-- Every sailor has a name.
-- Not all sailors have boats. (Only rich ones)
-- Some sailors do not like to sail on weekends. (they prefer to saty in and have Rum...).
+- Every boat has a owner, may not be unique. ✓
+- Every boat has a flag of the country of registration.(removed) ✓
+[CONSTRAINTS]: 
 -  
 
+Sailor ("Eye eye Capitan") 
+- Every sailor has a name.✓
+- Not all sailors have boats. (Only rich ones)✓
+- Some sailors do not like to sail on weekends. (they prefer to saty in and have Rum...).✓
+
+-------
 Owners
-- Every owner has a name.
-- Every owner has a birthday.
+- Every owner has a name.✓
+- Every owner has a birthday.✓
 
 Person
-- Every person has a name.
-- Every person has a national id.
+- Every person has a name.✓
+- Every person has a national id.✓
+-------
 
 Reservation
 - Sailors can reserve boats for a period of time, if the boat is available.
@@ -34,7 +37,7 @@ Trips
 - All trips have an end location.
 - All trips have a takee-off date.
 - All trips have a duration in days.
-- (?) When travelling to a country, every baot must have the flag of the country flag of the waters location/juristiction country.
+- (?) When travelling to a country, every boat must have the flag of the country flag of the waters location/juristiction country.
 
 Location
 - Every location has a name.
@@ -50,7 +53,9 @@ Country
 - Every country has a unique name.
 - Every country has a unique flag.
 - Every country has a unique ISO code.
-- Countries where boats can be registered must have at least one maritime location.
+- Some countries have maritime location.
+- Countries where boats can be registered, must have at least one maritime location.
+
 
  
 
