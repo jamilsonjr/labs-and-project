@@ -15,8 +15,8 @@ Sailor ("Eye eye Capitan")
 - Every sailor has a name.
 - Not all sailors have boats. (Only rich ones)
 - Some sailors do not like to sail on weekends. (they prefer to saty in and have Rum...).
--  
-
+-  Has a haircut
+-
 Owners
 - Every owner has a name.
 - Every owner has a birthday.
