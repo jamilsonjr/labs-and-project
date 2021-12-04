@@ -6,40 +6,44 @@ Entities:
             name: 
                 - Long string
                 - Not Unique
-            boat_id:
-                - ??
-            year_of_registration:
-                - 4 digits
+            boat_id: 
+                - [Primary Key]
+                - string?
+            year_of_registration: 
+                - [int] 4 digits
             mmsi:
-                - 9 digits longs
+                -  [int/long] 9 digits longs
                 - may be null (since it is optional)
+            country_flag:
+                
         
     Sailor:
         Atributes:
-            name:
-            national_id:
-            sail_on_weekends:
+            name: string
+            national_id: [Primary_Key]
+            sail_on_weekends: bool
         
     Owner:
         Atributes:
-            name:
-            national_id:
-            birth_date:
-            boats: [Foreign_Key]
+            name: string
+            national_id: string [Primary_key]
+            birth_date: date
+            boats: string? [Foreign_Key]
             
     Reservation:
         Atributes:
-            reservation_id:
+            reservation_id: int
             sailor: [Foreign_Key]
             boat: [Foreign_Key]
             trips: [Foreign_Key]
         
     Trip:
         Atributes:
-            trip_id:
-            start_location:
-            end_location:
+            trip_id: [Primary_key]
+            start_location: [Foreign_key]
+            end_location: [Foreign_key]
             takeoff_date:
+            courtesy_flag:
             duration:
             
     Location
@@ -54,7 +58,6 @@ Entities:
         Atributes: 
             name: Unique
             flag: Unique
-            iso: Unique
+            iso: Unique 
             maritime_location: optional [Foreign_key] (how to refer to location ?)
             
-## Relationships
