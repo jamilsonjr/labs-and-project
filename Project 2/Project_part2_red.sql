@@ -57,6 +57,6 @@ create table reservation(
 );
 
 create table Country(
-    iso integer,
+    iso integer, -- you sure not varchar(3 or 2 or 5?)
     constraint  country_pk primary key (iso)
 );

@@ -13,11 +13,13 @@ CREATE TABLE Boat (
     lenght integer,
     year integer,
     cni char(15),
+    owner_id INTEGER,
     primary key (iso_code,cni),
     foreign key(iso_code) REFERENCES Country(iso_code)
+    CONSTRAINT owner_id_fk FOREIGN KEY (owner_id) REFERENCES Owner(id_card) -- TODO confirm
 );
 
-CREATE TABLE Boar_with_VHF(
+CREATE TABLE Boat_with_VHF(
     mmsi numeric(9,0),
     iso_code varchar(70),
     cni char(15),
