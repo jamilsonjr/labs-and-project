@@ -1,29 +1,28 @@
 -- Strong Etities
 CREATE TABLE Person (
     name VARCHAR(80) NOT NULL,
-    id_card INTEGER NOT NULL,
-    is_citizen_id INTEGER NOT NULL,
-    CONSTRAINT person_pk PRIMARY KEY (id_card)
-    CONSTRAINT is_citizen_id_fk FOREIGN KEY (is_citizen_id) REFERENCES  Country(iso_code)
+    id_card INTEGER,
+    iso_code VARCHAR(70),
+    CONSTRAINT person_pk PRIMARY KEY (id_card, iso_code)
+    CONSTRAINT iso_code FOREIGN KEY (iso_code) REFERENCES Country(iso_code)
     -- Every Person must exist either in the table 'Sailor' or in table 'Owner'.
-    -- Add a check for the size of id_card ? 
-
+    -- Add a check for the size of id_card (Maybe later?) 
 )
 
 CREATE TABLE Sailor (
     id_card INTEGER,
-    CONSTRAINT sailor_pk PRIMARY KEY (id_card),
-    CONSTRAINT sailor_fk FOREIGN KEY (id_card) REFERENCES Person(id_card) 
-    -- Add a check for the size of id_card ? 
+    iso_code VARCHAR(70),
+    CONSTRAINT sailor_pk PRIMARY KEY (id_card, iso_code),
+    CONSTRAINT sailor_fk FOREIGN KEY (id_card, iso_code) REFERENCES Person(id_card, iso_code)  
 )
 
 CREATE TABLE Owner (
     id_card INTEGER,
+    iso_code VARCHAR(70),
     birth_date DATE NOT NULL,
-    CONSTRAINT owner_pk PRIMARY KEY (id_card),
-    CONSTRAINT owner_fk FOREIGN KEY (id_card) REFERENCES Person(id_card)
+    CONSTRAINT owner_pk PRIMARY KEY (id_card, iso_code),
+    CONSTRAINT owner_fk FOREIGN KEY (id_card, iso_code) REFERENCES Person(id_card, iso_code)  
     -- Every Owner MUST EXIST in the 'Boat' table. 
-    -- Add a check for the size of id_card ? 
 )
 
 CREATE TABLE Schedule (
@@ -32,17 +31,17 @@ CREATE TABLE Schedule (
     CONSTRAINT schedule_pk PRIMARY KEY (start_date, end_date)
     -- (IC1) Reservation schedules of boat most not overlap.
     -- (IC6) End date of a schedule must be after start date.
-
 )
 
 CREATE TABLE reservation (
-    id_card INTEGER,
-    iso_code VARCHAR(70),
-    cni CHAR(15),
+    sailor_id INTEGER,
+    sailor_iso_code VARCHAR(70),
+    boat_cni CHAR(15),
+    boat_iso_code VARCHAR(70),
     start_date DATE,
     end_date DATE,
-    CONSTRAINT reservation_pk PRIMARY KEY (id_card, iso_code, cni, start_date, end_date),
-    CONSTRAINT id_card_fk FOREIGN KEY(id_card) REFERENCES Person(id_card),
+    CONSTRAINT reservation_pk PRIMARY KEY (sailor_id, iso_code, cni, start_date, end_date),
+    CONSTRAINT id_card_fk FOREIGN KEY(sailor_id) REFERENCES Sailor(id_card, iso_code),
     CONSTRAINT iso_code_fk FOREIGN KEY(iso_code) REFERENCES Country(iso_code),
     CONSTRAINT cni_fk FOREIGN KEY(cni) REFERENCES Boat(cni),
     CONSTRAINT (start_date_fk, start_date_fk) FOREIGN KEY(start_date, end_date) REFERENCES Schedule(start_date, end_date))
