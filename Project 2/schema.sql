@@ -62,10 +62,11 @@ CREATE TABLE Boat (
     name VARCHAR(80) NOT NULL,
     iso_code VARCHAR(70), -- TODO confirm
     lenght INTEGER NOT NULL,
-    year INTEGER NOT NULL,-- TODO ASK ABOUT YEAR CONSTRAINT
+    year INTEGER NOT NULL,-- TODO ASK ABOUT YEAR CO€NSTRAINT
     cni CHAR(15),
     owner_id INTEGER,
     owner_iso_code VARCHAR(70),
+    CONSTRAINT boat_lenght CHECK (lenght > 0),
     CONSTRAINT boat_pk PRIMARY KEY (iso_code,cni),
     CONSTRAINT boat_fk FOREIGN KEY(iso_code) REFERENCES Country(iso_code),
     CONSTRAINT owner_id_fk FOREIGN KEY (owner_id, owner_iso_code) REFERENCES Owner(id_card, iso_code) -- TODO confirm
@@ -119,6 +120,7 @@ CREATE TABLE reservation (
     boat_iso_code VARCHAR(70),
     start_date DATE,
     end_date DATE,
+    CONSTRAINT Reservation_check_valid_dates CHECK (end_date > start_date),
     CONSTRAINT reservation_pk PRIMARY KEY (sailor_id, sailor_iso_code, boat_iso_code, boat_cni, start_date, end_date),
     CONSTRAINT reservation_sailor_fk FOREIGN KEY(sailor_id,sailor_iso_code) REFERENCES Sailor(id_card, iso_code),
     CONSTRAINT reservation_boat_fk FOREIGN KEY(boat_cni,boat_iso_code) REFERENCES Boat(cni,iso_code),
@@ -131,10 +133,10 @@ CREATE TABLE reservation (
 CREATE TABLE Trip (
     trip_date DATE,
     duration INTEGER NOT NULL,
-    boat_iso VARCHAR(70),
-    boat_cni CHAR(15),
-    sailor_iso VARCHAR(70),
     sailor_id INTEGER,
+    sailor_iso_code VARCHAR(70),
+    boat_cni CHAR(15),
+    boat_iso_code VARCHAR(70),
     reservation_start_date DATE,
     reservation_end_date DATE,
     from_location_lat NUMERIC(8,6) NOT NULL,  -- Mandatory Participation (M:1)
@@ -144,13 +146,13 @@ CREATE TABLE Trip (
     CONSTRAINT trip_check_duration_min CHECK (duration > 0),
     CONSTRAINT trip_pks PRIMARY KEY (
         trip_date,
-        boat_cni,boat_iso,
-        sailor_iso,sailor_id,
+        boat_cni,boat_iso_code,
+        sailor_iso_code,sailor_id,
         reservation_start_date,reservation_end_date
         ),
     CONSTRAINT trip_fks FOREIGN KEY (
-        sailor_id, sailor_iso,
-        boat_iso, boat_cni,
+        sailor_id, sailor_iso_code,
+        boat_iso_code, boat_cni,
         reservation_start_date,
         reservation_end_date)
     REFERENCES reservation(

@@ -41,13 +41,12 @@ CREATE TABLE reservation (
     start_date DATE,
     end_date DATE,
     CONSTRAINT reservation_pk PRIMARY KEY (sailor_id, iso_code, cni, start_date, end_date),
-    CONSTRAINT id_card_fk FOREIGN KEY(sailor_id) REFERENCES Sailor(id_card, iso_code),
-    CONSTRAINT iso_code_fk FOREIGN KEY(iso_code) REFERENCES Country(iso_code),
-    CONSTRAINT cni_fk FOREIGN KEY(cni) REFERENCES Boat(cni),
-    CONSTRAINT (start_date_fk, start_date_fk) FOREIGN KEY(start_date, end_date) REFERENCES Schedule(start_date, end_date))
-    -- CONSTRAINT _fk FOREIGN KEY()    TODO Check if this one exists
+    CONSTRAINT reservation_sailor_fk FOREIGN KEY(sailor_id,sailor_iso_code) REFERENCES Sailor(id_card, iso_code),
+    CONSTRAINT reservation_boat_fk FOREIGN KEY(boat_cni,boat_iso_code) REFERENCES Boat(boat_cni,iso_code),
+    CONSTRAINT reservation_schedule_fk FOREIGN KEY(start_date, end_date) REFERENCES Schedule(start_date, end_date))
+    -- (IC-1) Reservation schedules of a boat must not overlap.
     -- (IC2) Trips of a reservation must not overlap.
-)
+);
 
 
 

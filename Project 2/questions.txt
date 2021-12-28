@@ -1,0 +1,18 @@
+Enunciado
+- Person is a weak entity of person? Right? Confirms?
+
+Data Types
+- iso_code is VARCHAR(3)?
+- id_card(PERSON), can be an integer?
+    - Do we need to check the size?
+- (Boat) year is an INTEGER? How to constrain it?
+- MMSI has to be unique? 9 characters? Or integer? 
+- CNI, what is the format?
+- (TRIP) if Trip is a weak entity of reservation, does it have the 6 keys? Or there is a more clever ways?
+
+QUERIES
+- Confirm QUERIES...
+
+POPULATE
+- What do they mean with "INSERT statements that you find necessary to cover specific characteristics
+that real data scenarios can have in order to validate the expected results of the queries." ??
