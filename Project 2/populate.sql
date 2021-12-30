@@ -100,21 +100,5 @@ INSERT INTO Trip VALUES('2020-05-30',60,33333, 'IND', 'PT2002', 'PRT', '2020-05-
 INSERT INTO Trip VALUES('2021-01-05',1,11111, 'THA', 'PT1937', 'PRT', '2021-01-05','2021-01-06',16.696142, -3.208323,25.696142, -5.208335);
 INSERT INTO Trip VALUES('2021-11-30',30,22222, 'PRT', 'PT1530', 'PRT', '2021-11-30','2022-01-05', 25.696142, -5.208335, 15.430154, 73.811340);
 
-/*
-    Trip parameter Order:
-
-    trip_date DATE,
-    duration INTEGER NOT NULL,
-    sailor_id INTEGER,
-    sailor_iso_code VARCHAR(70),
-    boat_cni CHAR(15),
-    boat_iso_code VARCHAR(70),
-    reservation_start_date DATE,
-    reservation_end_date DATE,
-    from_location_lat NUMERIC(8,6) NOT NULL,  -- Mandatory Participation (M:1)
-    from_location_long NUMERIC(8,6) NOT NULL, -- Mandatory Participation (M:1)
-    to_location_lat NUMERIC(8,6) NOT NULL,    -- Mandatory Participation (M:1)
-    to_location_long NUMERIC(8,6) NOT NULL,   -- Mandatory Participation (M:1)
-*/
 
 

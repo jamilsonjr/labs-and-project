@@ -9,7 +9,7 @@ SELECT DISTINCT * FROM sailor
 WHERE (sailor.id_card, sailor.iso_code) IN 
 (SELECT sailor_id,sailor_iso_code FROM Reservation WHERE boat_iso_code = 'PRT');
 
---SQL QUERY C\
+--SQL QUERY C
 SELECT DISTINCT * FROM reservation WHERE end_date - start_date > 5;
 
 -- SQL QUERY D 

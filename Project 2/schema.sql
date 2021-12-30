@@ -13,10 +13,10 @@ DROP TABLE IF EXISTS Port CASCADE;
 DROP TABLE IF EXISTS Trip CASCADE;
 DROP TABLE IF EXISTS reservation CASCADE;
 
--- Strong Entities
+-- Entities
 CREATE TABLE Country(
-    iso_code VARCHAR(3), 
-    flag TEXT NOT NULL,/*indica a path da localização da imagem*/
+    iso_code VARCHAR(3),
+    flag TEXT NOT NULL, -- Filepath to the image (URL)
     name VARCHAR(70) NOT NULL,
     UNIQUE (flag), -- IC-4: Flags are unique
     UNIQUE (name), -- IC-5: Country Names are unique
@@ -26,17 +26,17 @@ CREATE TABLE Country(
 CREATE TABLE Person (
     name VARCHAR(80) NOT NULL,
     id_card NUMERIC(15,0),
-    iso_code VARCHAR(3),
+    iso_code VARCHAR(3),  
     CONSTRAINT person_pk PRIMARY KEY (id_card, iso_code),
-    CONSTRAINT iso_code FOREIGN KEY (iso_code) REFERENCES Country(iso_code)
-    -- (IC) Every Person must exist either in the table 'Sailor' or in table 'Owner'. 
+    CONSTRAINT person_iso_code FOREIGN KEY (iso_code) REFERENCES Country(iso_code)
+    -- (IC) Every Person must exist either in the table 'Sailor' or in table 'Owner'. (Mandatory Specialization) 
 );
 
 CREATE TABLE Sailor (
     id_card NUMERIC(15,0),
     iso_code VARCHAR(3),
     CONSTRAINT sailor_pk PRIMARY KEY (id_card, iso_code),
-    CONSTRAINT sailor_fk FOREIGN KEY (id_card, iso_code) REFERENCES Person(id_card, iso_code)  
+    CONSTRAINT sailor_fk FOREIGN KEY (id_card, iso_code) REFERENCES Person(id_card, iso_code)  -- Specialization of Person
 );
 
 CREATE TABLE Owner (
@@ -45,14 +45,14 @@ CREATE TABLE Owner (
     birth_date DATE NOT NULL,
     CONSTRAINT owner_check_birth_date CHECK(birth_date <= CURRENT_DATE), 
     CONSTRAINT owner_pk PRIMARY KEY (id_card, iso_code),
-    CONSTRAINT owner_fk FOREIGN KEY (id_card, iso_code) REFERENCES Person(id_card, iso_code)
-    -- (IC) Every Owner MUST EXIST in the 'Boat' table. (Mandatory Specialization)
+    CONSTRAINT owner_fk FOREIGN KEY (id_card, iso_code) REFERENCES Person(id_card, iso_code) -- Specialization of Person
+    -- (IC) Every Owner MUST EXIST in the 'Boat' table. (Mandatory Participation)
 );
 
 CREATE TABLE Schedule (
     start_date DATE,
     end_date DATE,
-    CONSTRAINT schedule_check_valid_dates CHECK (end_date > start_date), -- (IC6) End date of a schedule must be after start date.
+    CONSTRAINT schedule_check_valid_dates CHECK (end_date > start_date), -- (IC-6) End date of a schedule must be after start date.
     CONSTRAINT schedule_pk PRIMARY KEY (start_date, end_date)
     -- (IC-1) Reservation schedules of boat most not overlap.
 );
@@ -63,13 +63,13 @@ CREATE TABLE Boat (
     lenght INTEGER NOT NULL,
     year INTEGER NOT NULL,
     cni VARCHAR(15),
-    owner_id NUMERIC(15,0),
-    owner_iso_code VARCHAR(3),
-    CONSTRAINT boat_lenght CHECK (lenght > 0 AND lenght < 500), -- note: in meters
-    CONSTRAINT boat_check_year CHECK (year >= 1800 AND year <= EXTRACT( year from CURRENT_DATE)), --- CONFIRM AND TEST
+    owner_id NUMERIC(15,0),     -- Mandatory Participation (M:1)
+    owner_iso_code VARCHAR(3),  -- Mandatory Participation (M:1)
+    CONSTRAINT boat_lenght CHECK (lenght > 0 AND lenght < 500), -- Note: Lenght expected in meters
+    CONSTRAINT boat_check_year CHECK (year >= 1800 AND year <= EXTRACT( year from CURRENT_DATE)),
     CONSTRAINT boat_pk PRIMARY KEY (iso_code,cni),
     CONSTRAINT boat_fk FOREIGN KEY(iso_code) REFERENCES Country(iso_code),
-    CONSTRAINT owner_id_fk FOREIGN KEY (owner_id, owner_iso_code) REFERENCES Owner(id_card, iso_code)
+    CONSTRAINT boat_owner_id_fk FOREIGN KEY (owner_id, owner_iso_code) REFERENCES Owner(id_card, iso_code) -- Mandatory Participation (M:1)
 );
 
 CREATE TABLE Boat_With_VHF(
@@ -78,7 +78,7 @@ CREATE TABLE Boat_With_VHF(
     cni VARCHAR(15),
     UNIQUE(mmsi),
     CONSTRAINT boat_with_vhf_pk PRIMARY KEY(cni,iso_code),
-    CONSTRAINT boat_with_vhf_fk FOREIGN KEY(cni,iso_code) REFERENCES Boat(cni,iso_code)
+    CONSTRAINT boat_with_vhf_fk FOREIGN KEY(cni,iso_code) REFERENCES Boat(cni,iso_code) -- Specialization of Boat
 );
 
 CREATE TABLE Location (
@@ -115,6 +115,7 @@ CREATE TABLE Port (
     CONSTRAINT port_pks PRIMARY KEY (latitude,longitude),
     CONSTRAINT port_fks FOREIGN KEY (latitude,longitude) REFERENCES Location(latitude,longitude) -- Specialization of Location
 );
+
 -- Associations
 CREATE TABLE reservation (
     sailor_id NUMERIC(15,0),
