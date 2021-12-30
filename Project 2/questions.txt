@@ -19,3 +19,12 @@ that real data scenarios can have in order to validate the expected results of t
  
 RESPOSTA: Um registo que encaixe, e um que seja fora
 testar as querias que são dadas, e separam registo que se encaixam e não se encaixam! 
+
+------------------------------ Little notes -----------------------------------------
+The field "flag" in the entity Country stores the path of where the flag is stored. In our INSERT statements it contains a web link.
+The iso_code was chosen to be a VARCHAR(3) because of definition on https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes.
+The cni was chosen to be a VARCHAR(15) because of it is a reasonable size value and data type for a national identifier of boats.
+The year of boats are constrained between the current year and the year of 1800, once the oldest active boat is from a prior year (https://sdmaritime.org/latest-news/celebrating-star-of-indias-155-years/#:~:text=Star%20of%20India%2C%20built%20in,the%20globe%20twenty%2Done%20times).
+The id_card was chosen to be a NUMERIC value, beacuse with this datatype it is possible to constrain its size to a fixed value, in this case 15.
+The mmsi was chosen to be an UNIQUE and NUMERIC value because it is the world wide convention (https://www.ic.gc.ca/eic/site/smt-gst.nsf/eng/h_sf06198.html).   
+The latitude and longitude are constrained according to the international convention (https://www.latlong.net/).

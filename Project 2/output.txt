@@ -1,0 +1,31 @@
+-- OUTPUT QUERY A
+
+name,iso_code,lenght,year,cni,owner_id,owner_iso_code
+Vera Cruz,PRT,24,2002,PT2002,55555,BRA
+Sagres,PRT,89,1937,PT1937,33333,IND
+Bota-fogo,PRT,50,1801,PT1530,55555,BRA
+RMS Titanic,IND,269,1909,RMS1909,44444,ZAF
+
+
+-- OUTPUT QUERY B
+
+id_card,iso_code
+22222,PRT
+33333,IND
+11111,THA
+
+
+-- OUTPUT QUERY C
+
+sailor_id,sailor_iso_code,boat_cni,boat_iso_code,start_date,end_date
+77777,PRT,RMS1909,IND,2021-11-30,2022-01-05
+22222,PRT,PT1530,PRT,2021-12-30,2023-01-05
+33333,IND,PT2002,PRT,2020-05-30,2020-08-30
+11111,THA,PT1937,PRT,2021-12-30,2022-01-05
+22222,PRT,PT1530,PRT,2021-11-30,2022-01-05
+
+
+-- OUTPUT QUERY D
+
+name,cni
+Rendeiro$ Yatch,Rendeiro$

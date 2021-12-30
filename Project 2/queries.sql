@@ -1,12 +1,15 @@
 -- SQL Queries:
 
 -- SQL QUERY A
-SELECT DISTINCT boat_cni, boat_iso_code FROM reservation;
+SELECT DISTINCT * FROM boat
+WHERE (boat.cni, boat.iso_code) IN (SELECT boat_cni,boat_iso_code FROM Reservation);
 
 --SQL QUERY B
-SELECT DISTINCT sailor_id,sailor_iso_code FROM reservation WHERE boat_iso_code='PRT';
+SELECT DISTINCT * FROM sailor
+WHERE (sailor.id_card, sailor.iso_code) IN 
+(SELECT sailor_id,sailor_iso_code FROM Reservation WHERE boat_iso_code = 'PRT');
 
---SQL QUERY C
+--SQL QUERY C\
 SELECT DISTINCT * FROM reservation WHERE end_date - start_date > 5;
 
 -- SQL QUERY D 
