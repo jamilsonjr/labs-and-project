@@ -75,17 +75,17 @@ RETURNS TRIGGER LANGUAGE plpgsql AS
         END;
     $$;
 
-DROP TRIGGER IF EXISTS chk_location_type ON marina;
+DROP TRIGGER IF EXISTS chk_location_type_marina ON marina;
 CREATE TRIGGER chk_location_type_marina
 BEFORE INSERT ON marina
 FOR EACH ROW EXECUTE PROCEDURE check_location_type_fn();
 
-DROP TRIGGER IF EXISTS chk_location_type ON port;
+DROP TRIGGER IF EXISTS chk_location_type_port ON port;
 CREATE TRIGGER chk_location_type_port
 BEFORE INSERT ON port
 FOR EACH ROW EXECUTE PROCEDURE check_location_type_fn();
 
-DROP TRIGGER IF EXISTS chk_location_type ON wharf;
+DROP TRIGGER IF EXISTS chk_location_type_wharf ON wharf;
 CREATE TRIGGER chk_location_type_wharf
 BEFORE INSERT ON wharf
 FOR EACH ROW EXECUTE PROCEDURE check_location_type_fn();
@@ -106,8 +106,8 @@ $$
         where location.iso_code = new.iso_code;
 
         if reg_country is null then
-            RAISE EXCEPTION 'Boat cannot be registred in country!';
-            USING HINT = 'Please, make sure the boat is resgistred iavailable for the time period you want to book it.';
+            RAISE EXCEPTION 'Boat cannot be registred in country!'
+            USING HINT = 'Please, make sure the boat is resgistred in a country with a registred location!';
         else
             return new; -- continues normally
         end if;

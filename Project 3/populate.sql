@@ -15,6 +15,7 @@ INSERT INTO Country VALUES('https://www.worldometers.info/img/flags/ch-flag.gif'
                             'China',
                             'CN');
 -- Location table INSERTS
+START TRANSACTION;
 -- PT locations
 INSERT INTO location VALUES('Belem', 38.694664, -9.204000,'PT');
 INSERT INTO location VALUES('Parque das Naçoes', 38.754363, -9.093657,'PT');
@@ -36,6 +37,8 @@ INSERT INTO wharf VALUES(-33.800334, 18.377103); -- Murray Bay
 -- Port table INSERTS
 INSERT INTO port VALUES(38.694664, -9.204000);   -- Belem
 INSERT INTO port VALUES(-22.947632, -43.173545); -- Botafogo
+
+COMMIT TRANSACTION;
 
 -- Person table INSERTS
 INSERT INTO person VALUES ('111','Joao','PT');
@@ -111,3 +114,4 @@ INSERT INTO trip VALUES('2022-02-02',20,'South-B2','ZF','333','BR','2022-01-01',
 -- Trips made by Chen
 INSERT INTO trip VALUES('2022-01-01',20,'NRP 4','PT','444','CN','2022-01-01','2022-02-01',38.694664, -9.204000,-22.973280, -43.183140); -- Chen viaja ao longo de 20 dias de belem para copacabana (BR) no Beijing
 INSERT INTO trip VALUES('2022-02-02',10,'BRZ 3','BR','444','CN','2022-02-02','2022-03-01',-22.973280, -43.183140,-33.800334, 18.377103); -- Chen viaja ao longo de 15 dias copacabana para Muray bay (ZF) no Xangai
+
