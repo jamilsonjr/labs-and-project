@@ -32,22 +32,45 @@ having count(distinct(iso_code))>= 2;
 
 -- ##################################################################################
 -- querie 3 -  Who are the sailors that have sailed to every location in 'Portugal'?
-select id, iso_code, name
-from person join
+
+select iso_code_sailor, id_sailor
+from
 (
     select *
-    from 
+    from
     (
-        select *
-        from
-            reservation natural join trip join location l
-            on trip.end_latitude = l.latitude and trip.end_longitude = l.longitude
-        where l.iso_code = "PT" and end_date >= CURRENT_DATE
+        trip join location l
+        on trip.end_latitude = l.latitude and trip.end_longitude = l.longitude
+        where l.iso_code = 'PT' and end_date <= CURRENT_DATE -- check date?
     )
-    
-    
-    group by id_sailor
-    having count(distinct(latitude, longitude)) = count(location.iso_code = "PT")
 )
-as o
-on person.id = o.id_sailor and person.iso_code = o.iso_code_sailor;
+as sailor_locations
+group by id_sailor, iso_code_sailor
+having count(distinct(latitude, longitude)) = 
+(
+    select count(*)
+    from location
+    where iso_code = 'PT'
+);
+
+-- ##################################################################################
+-- querie 4 - List the sailors with the most trips along with their reservations
+
+select iso_code_sailor, id_sailor, sum(duration)
+from trip
+group by start_date, end_date, iso_code_boat, cni, id_sailor,iso_code_sailor
+having sum(duration) >= ALL
+(
+    select sum(duration)
+    from trip
+    group by start_date, end_date, iso_code_boat, cni, id_sailor,iso_code_sailor
+)
+
+
+
+
+
+-- ##################################################################################
+-- querie 5 - List the sailors with the longest duration of trips (sum of trip durations)
+-- for the same single reservation; display also the sum of the trip durations.
+
