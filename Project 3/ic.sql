@@ -31,15 +31,15 @@ $$
             if ((new.start_date between res_int.start_date and res_int.end_date)
                 or (new.end_date between  res_int.start_date and res_int.end_date)
                 or (new.start_date <= res_int.start_date and new.end_date >= res_int.end_date)) then
-                raise notice 'Boat sold out for that period!';
+
                 close cursor_reservation;
-                return old; -- stops from inserting
+                RAISE EXCEPTION 'Boat sold out for that period!'
+                USING HINT = 'Please, make sure the boat is available for the time period you want to book it.';
             end if;
 
         end loop;
         -- if not, may proceed!
         close cursor_reservation;
-        raise notice 'Nothing to see here!';
         return new;
     END;
 $$;
@@ -67,7 +67,8 @@ RETURNS TRIGGER LANGUAGE plpgsql AS
                 )
             THEN
                 RAISE EXCEPTION 'This location is already specialized.'
-                USING HINT = 'Please, make sure that the location is not already in one of the types of location tables.';
+                USING HINT = 'Please, make sure you use the START TRANSACTION query to insert into wharf,
+                            marina or port tables while you also insert into to the Location table.';
                 RETURN OLD;
             END IF;
             RETURN NEW;
@@ -105,10 +106,9 @@ $$
         where location.iso_code = new.iso_code;
 
         if reg_country is null then
-            raise notice 'Country cannot register boats!';
-            return old; -- does nothing (aka stops insertion)
+            RAISE EXCEPTION 'Boat cannot be registred in country!';
+            USING HINT = 'Please, make sure the boat is resgistred iavailable for the time period you want to book it.';
         else
-            raise notice 'Nothing to see here...';
             return new; -- continues normally
         end if;
     END;
