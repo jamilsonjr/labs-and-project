@@ -1,0 +1,7 @@
+Questions:
+- IC-2 Loop ? Nop, start transacntion 
+- UPDATES and DELETES ? Se preocuparmos com os INSERT, temos de fazer updates and deletes
+- RAISE NOTICE vs RAISE EXCEPTION? Raise exception
+
+Fazer lab-8 o da aula...
+

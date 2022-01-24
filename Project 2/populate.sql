@@ -1,4 +1,3 @@
-
 -- Country table INSERTs
 INSERT INTO Country VALUES('BRA',
                            'https://www.worldometers.info/img/flags/br-flag.gif',
