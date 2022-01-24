@@ -20,8 +20,6 @@ where contador.count = (
 );
 
 
-
-
 -- ##################################################################################
 -- querie 2 - List all the owners that have at least two boats in distinct countries.
 
@@ -56,21 +54,32 @@ having count(distinct(latitude, longitude)) =
 -- ##################################################################################
 -- querie 4 - List the sailors with the most trips along with their reservations
 
-select iso_code_sailor, id_sailor, sum(duration)
+select *
 from trip
-group by start_date, end_date, iso_code_boat, cni, id_sailor,iso_code_sailor
-having sum(duration) >= ALL
+where (id_sailor, iso_code_sailor) in
 (
-    select sum(duration)
+    select id_sailor,iso_code_sailor
     from trip
-    group by start_date, end_date, iso_code_boat, cni, id_sailor,iso_code_sailor
-)
-
-
-
+    group by id_sailor,iso_code_sailor
+    having count(*) >= ALL
+    (
+        select count(*)
+        from trip
+        group by id_sailor,iso_code_sailor
+    )
+);
 
 
 -- ##################################################################################
 -- querie 5 - List the sailors with the longest duration of trips (sum of trip durations)
 -- for the same single reservation; display also the sum of the trip durations.
 
+select  id_sailor,iso_code_sailor, sum(duration)
+from trip
+group by start_date, end_date, iso_code_boat, cni, id_sailor,iso_code_sailor -- group by reservation
+having sum(duration) >= ALL
+(
+    select sum(duration)
+    from trip
+    group by start_date, end_date, iso_code_boat, cni, id_sailor,iso_code_sailor -- group by reservation
+);
