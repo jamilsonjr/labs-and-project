@@ -1,14 +1,15 @@
 #!/usr/bin/python3
-from traceback import print_tb
+
 import psycopg2
 import login
+
+#Initizalize HTML
 print('Content-type:text/html\n\n')
 print('<html>')
 print('<head>')
 print('<title> Project 3 - Owner</title>')
 print('</head>')
 print('<body>')
-print('<h3>Boat Owners</h3>')
 connection = None
 
 try:
@@ -16,49 +17,65 @@ try:
     connection = psycopg2.connect(login.credentials)
     cursor = connection.cursor()
 
-    # Making query
-    sql = 'SELECT * FROM owner;'
+    # Page Header
+    print('<h3>List of Boat Owners</h3>')
+
+    # Create and Run SQL Query
+    sql = 'SELECT name,id,iso_code,birthdate FROM owner natural join person;'
     cursor.execute(sql)
     result = cursor.fetchall()
     num = len(result)
-    owner_header = ['ID','ISO Code','Birthdate','Action']
-    owner_id = None
-    owner_iso_code = None
-    owner_birthdate=None
+    
 
 
-    # Displaying results
+    # Create and Format Table
     print('<table border="0" cellspacing="10">')
-
+    # Table Header
+    owner_header = ['Name','ID','ISO Code','Birthdate','Action']
     print('<tr>')
     for col_name in owner_header:
         print('<th>%s</th>'%col_name)
     print('</tr>')
-
+    # Table Rows
     for row in result:
         print('<tr>')
         for value in row:
             # The string has the {}, the variables inside format() will replace the {}
             print('<td><center>{} </center></td>'.format(value))
-        print('<td><a href="delete_owner.cgi?owner_id={}&owner_iso_code={}">Remove Owner</a></td>'.format(row[0],row[1])) #Scanf
+        print('<td><a href="delete_owner.cgi?owner_id={}&owner_iso_code={}">Remove Owner</a></td>'.format(row[1],row[2])) #Scanf
         print('</tr>')
     print('</table>')
 
-    print('<h3>New owner? Please register here:</h3>')
 
+    # Page Header 2
+    print('<h3>New owner? Please register here:</h3>')
+    # Create Form
     print('<form action="insert_owner.cgi" method="post">')
     print('<p>Id: <input type="text" name="owner_id"/></p>')
-    print('<p>ISO code: <input type="text" name="owner_iso_code"/></p>')
-    print('<p>Birthdate: <input type="text" name="owner_birthdate"/></p>')
+    # Create and Run SQL Query
+    sql = 'SELECT DISTINCT iso_code FROM person;'
+    cursor.execute(sql)
+    result = cursor.fetchall()
+
+    print('<label for="owner_iso_code">Owner Nationality (ISO Code):</label>')
+    print('<select name="owner_iso_code" id="owner_iso_code">')
+    for iso in result:
+        print('<option value={}>{}</option>'.format(iso[0],iso[0]))
+    print('</select>')
+
+    print('<br><br>')
+
+    print('<label for="owner_birthdate">Birthdate:</label>')
+    print('<input type="date" id="owner_birthdate" name="owner_birthdate">')
+    
+    # Submit and Close form
     print('<p><input type="submit" value="Register Owner"/></p>')
     print('</form>')
-    print('<p></p>')
-    print('<p></p>')
-    print('<p></p>')
-    print('<p> <a href="sibd.cgi"> < Index </a></p>')
+    print('<p> <a href="home.cgi"> < Home Page </a></p>')
 
     # Closing connection
     cursor.close()
+    connection.close()
 
 except Exception as e:
     # Print errors on the webpage if they occur
@@ -69,5 +86,6 @@ finally:
     if connection is not None:
         connection.close()
 
+# Close HTML
 print('</body>')
 print('</html>')

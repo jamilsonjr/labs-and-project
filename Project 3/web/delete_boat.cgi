@@ -5,14 +5,14 @@ import login
 
 # Load Attributes
 form = cgi.FieldStorage()
-owner_id = form.getvalue('owner_id')
-owner_iso_code = form.getvalue('owner_iso_code')
+boat_cni = form.getvalue('boat_cni')
+boat_iso_code = form.getvalue('boat_iso_code')
 
 #Initizalize HTML
 print('Content-type:text/html\n\n')
 print('<html>')
 print('<head>')
-print('<title>Project 3 - Owner </title>')
+print('<title>Project 3 - Boat </title>')
 print('</head>')
 print('<body>')
 
@@ -24,20 +24,18 @@ try:
     cursor = connection.cursor()
 
     # Page Header
-    print('<h3>SQL LOG - DELETE OWNER:</h3>')
-
-    # Create SQL Query
-    sql = 'DELETE FROM owner WHERE id = %s AND iso_code = %s;'
-    data = (owner_id, owner_iso_code)
-    print('<p>Query: {}.</p>'.format(sql % data))
+    print('<h3>SQL LOG - DELETE BOAT:</h3>')
     
-    # Run SQL Query 
+    # Create SQL Query
+    sql = 'DELETE FROM boat WHERE cni = %s AND iso_code = %s;'
+    data = (boat_cni, boat_iso_code)
+    print('<p>Query: {}.</p>'.format(sql % data))
     cursor.execute(sql, data)
     connection.commit()
     print('<p>Status: Delete completed sucessfully.</p>')
 
-    # Connectivity to Page - Owner
-    print('<td><a href="owner.cgi"> < List of Owners </a></td>')
+    # Connectivity to Page - Boat
+    print('<td><a href="boat.cgi"> < Go Back! </a></td>')
 
     # Closing connection
     cursor.close()

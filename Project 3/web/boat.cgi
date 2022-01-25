@@ -1,14 +1,14 @@
 #!/usr/bin/python3
-from traceback import print_tb
 import psycopg2
 import login
+
+#Initizalize HTML
 print('Content-type:text/html\n\n')
 print('<html>')
 print('<head>')
 print('<title> Project 3 - Boat</title>')
 print('</head>')
 print('<body>')
-print('<h3>Boat</h3>')
 connection = None
 
 try:
@@ -16,50 +16,85 @@ try:
     connection = psycopg2.connect(login.credentials)
     cursor = connection.cursor()
 
+    # Page Header
+    print('<h3>List of Boat</h3>')
+
     # Making query
-    sql = 'SELECT * FROM boat;'
+    sql = 'SELECT b.name,b.year,b.cni,b.iso_code,p.name,p.id,p.iso_code,v.mmsi FROM boat b NATURAL LEFT OUTER JOIN boat_vhf v join person p on b.id_owner = p.id AND b.iso_code_owner = p.iso_code ;'
     cursor.execute(sql)
     result = cursor.fetchall()
     num = len(result)
-    boat_header = ['Name','Year','CNI','Boat ISO Code','Owner ID','Owner ISO Code']
-    boat_cni = None
-    boat_iso_code = None
+    
 
-    # Displaying results
+    # Create and Format Table
     print('<table border="0" cellspacing="10">')
-
     print('<tr>')
+    # Table Header
+    boat_header = ['Name','Year','Boat CNI','Boat ISO Code','Owner Name','Owner ID','Owner ISO Code','MMSI']
     for col_name in boat_header:
         print('<th>%s</th>'%col_name)
     print('</tr>')
-
+    # Table Rows
     for row in result:
         print('<tr>')
         for value in row:
             # The string has the {}, the variables inside format() will replace the {}
             print('<td><center>{} </center></td>'.format(value))
-        print('<td><a href="delete_boat.cgi?boat_cni={}&boat_iso_code={}">Remove Boat</a></td>'.format(row[0],row[1])) #Scanf
+        print('<td><a href="delete_boat.cgi?boat_cni={}&boat_iso_code={}">Remove Boat</a></td>'.format(row[2],row[3])) #Scanf
         print('</tr>')
     print('</table>')
 
+    
+    # Page Header 2
     print('<h3>New Boat? Please register here:</h3>')
-
+    # Create Form
     print('<form action="insert_boat.cgi" method="post">')
     print('<p>Boat Name: <input type="text" name="boat_name"/></p>')
-    print('<p>Year of Registration: <input type="text" name="boat_iso_code"/></p>')
+    print('<p>Year of Registration: <input type="text" name="boat_year"/></p>')
     print('<p>Country identifier (CNI): <input type="text" name="boat_cni"/></p>')
-    print('<p>Country of Registration (ISO Code): <input type="text" name="boat_iso_code"/></p>')
-    print('<p>Owner ID: <input type="text" name="boat_owner_id"/></p>')
-    print('<p>Owner Nationality (ISO Code): <input type="text" name="boat_owner_iso_code"/></p>')
-    print('<p><input type="submit" value="Register Owner"/></p>')
+    # Create and Run SQL Query
+    sql = 'SELECT DISTINCT iso_code FROM location;'
+    cursor.execute(sql)
+    result = cursor.fetchall()
+
+    print('<label for="boat_iso_code">Country of Registration (ISO Code):</label>')
+    print('<select name="boat_iso_code" id="boat_iso_code">')
+    for iso in result:
+        print('<option value={}>{}</option>'.format(iso[0],iso[0]))
+    print('</select>')
+
+    print('<br><br>')
+
+    sql = 'SELECT id,iso_code FROM owner;'
+    cursor.execute(sql)
+    result = cursor.fetchall()
+
+    print('<label for="boat_owner_id">Owner ID:</label>')
+    print('<select name="boat_owner_id" id="boat_owner_id">')
+    for id in result:
+        print('<option value={}>{}</option>'.format(id[0],id[0]))
+    print('</select>')
+
+    print('<br><br>')
+
+    print('<label for="boat_owner_iso_code">Owner Nationality (ISO Code):</label>')
+    print('<select name="boat_owner_iso_code" id="boat_owner_iso_code">')
+    for id in result:
+        print('<option value={}>{}</option>'.format(id[1],id[1]))
+    print('</select>')
+
+    
+    print('<p>Boat MMSI (Optional): <input type="text" name="boat_mmsi"/></p>')
+    # Submit and Close form
+    print('<p><input type="submit" value="Register Boat"/></p>')
     print('</form>')
-    print('<p></p>')
-    print('<p></p>')
-    print('<p></p>')
-    print('<p> <a href="sibd.cgi"> < Index </a></p>')
+
+    # Connectivity to Home Page
+    print('<p> <a href="home.cgi"> < Home Page </a></p>')
 
     # Closing connection
     cursor.close()
+    connection.close()
 
 except Exception as e:
     # Print errors on the webpage if they occur
@@ -70,5 +105,6 @@ finally:
     if connection is not None:
         connection.close()
 
+# Close HTML
 print('</body>')
 print('</html>')

@@ -2,14 +2,14 @@
 import psycopg2, cgi
 import login
 
+# Load Attributes
 form = cgi.FieldStorage()
-
-#getvalue uses the names from the form in previous page
 owner_id = form.getvalue('owner_id')
 owner_iso_code = form.getvalue('owner_iso_code')
 owner_birthdate = form.getvalue('owner_birthdate')
 owner_name = form.getvalue('owner_name')
 
+# Initizalize HTML
 print('Content-type:text/html\n\n')
 print('<html>')
 print('<head>')
@@ -23,7 +23,10 @@ try:
     connection = psycopg2.connect(login.credentials)
     cursor = connection.cursor()
 
-    # Making query
+    # Page Header
+    print('<h3>SQL LOG - INSERT OWNER:</h3>')
+
+    # Create and Run SQL Query
     sql = 'SELECT check_person(%s,%s);'
     data = (owner_id,owner_iso_code)
     cursor.execute(sql,data)
@@ -32,48 +35,56 @@ try:
 
     sql = 'INSERT INTO owner VALUES (%s,%s,%s);'
     data = (owner_id, owner_iso_code,owner_birthdate)
-    print('<p>Query Executed: {}</p>'.format(sql % data))
+    print('<p>Query: {}.</p>'.format(sql % data))
 
     if num == 1 and result[0][0] == True: # Execute if valid operation
 
         cursor.execute(sql, data)
         connection.commit()
    
-        print('<p>Status: Completed Sucessfully </p>')
+        print('<p>Status: Insert completed sucessfully.</p>')
 
     elif owner_name != None:
-
+        print('<p>Status: Insert aborted...</p>')
         sql = 'INSERT INTO person VALUES (%s,%s,%s);'
         data = (owner_id, owner_name, owner_iso_code)
-        print('<p>Query Executed: {}</p>'.format(sql % data))
+        print('<p>Query: {}.</p>'.format(sql % data))
         cursor.execute(sql, data)
         connection.commit()
+        print('<p>Status: Insert completed sucessfully.</p>')
 
         sql = 'INSERT INTO owner VALUES (%s,%s,%s);'
         data = (owner_id, owner_iso_code,owner_birthdate)
 
-        print('<p>Query Executed: {}</p>'.format(sql % data))
+        print('<p>Query: {}.</p>'.format(sql % data))
         cursor.execute(sql, data)
         connection.commit()
    
-        print('<p>Status: Completed Sucessfully </p>')
+        print('<p>Status: Insert completed sucessfully. </p>')
         
 
     else :
-        print('<p> Status: Failed - There is no person registered with credentials: {} , {} .    Please fill the information below </p>'.format(owner_id,owner_iso_code))
+        # Person not Registered
+        print('<p> Status: <b>Insert Failed</b>. There is no person registered with credentials: {} , {}.'.format(owner_id,owner_iso_code))    
+        print('<p>Hint: Please fill the information below. </p>')
+        
+        print('<h3>Register new Person</h3>')
+
         print('<form action="insert_owner.cgi" method="post">')
         print('<p><input type="hidden" name="owner_id" value="{}"/></p>'.format(owner_id))
         print('<p> Name: <input type="text" name="owner_name"/></p>')
         print('<p><input type="hidden" name="owner_iso_code" value="{}"/></p>'.format(owner_iso_code))
         print('<p><input type="hidden" name="owner_birthdate" value="{}"/></p>'.format(owner_birthdate))
-        
+        # Submite and Close Form
         print('<p><input type="submit" value="Register Person"/></p>')
         print('</form>')
 
-
-    print('<td><a href="owner.cgi"> < Go Back! </a></td>')
+    # Connectivity to Page - Owner
+    print('<td><a href="owner.cgi"> < List of Owners </a></td>')
+    
     # Closing connection
     cursor.close()
+    connection.close()
 
 except Exception as e:
     # Print errors on the webpage if they occur
@@ -85,5 +96,22 @@ finally:
     if connection is not None:
         connection.close()
 
+# Close HTML
 print('</body>')
 print('</html>')
+
+# drop function if exists check_person(owner_id varchar, owner_iso_code char);
+# create function check_person(owner_id varchar(80),owner_iso_code char(2))
+# returns bool
+# language plpgsql
+#   as
+# $$
+
+#     BEGIN
+#         If exists (SELECT * FROM person WHERE id = owner_id AND iso_code = owner_iso_code) then
+#             return true;
+#         else
+#             return false;
+#         end if;
+#     END
+# $$;
