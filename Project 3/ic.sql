@@ -119,3 +119,5 @@ create trigger tg_verify_country_location
     before insert on boat
     for each row execute procedure check_location();
  -- Works nicely!!
+
+-- trigger for deleting

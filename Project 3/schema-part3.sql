@@ -27,28 +27,28 @@ CREATE TABLE location
     longitude NUMERIC(9, 6),
     iso_code  CHAR(2),
     PRIMARY KEY (latitude, longitude),
-    FOREIGN KEY (iso_code) REFERENCES country (iso_code)
+    FOREIGN KEY (iso_code) REFERENCES country (iso_code) ON DELETE CASCADE
 );
 
 CREATE TABLE marina
 (
     latitude  NUMERIC(8, 6),
     longitude NUMERIC(9, 6),
-    FOREIGN KEY (latitude, longitude) REFERENCES location (latitude, longitude)
+    FOREIGN KEY (latitude, longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE
 );
 
 CREATE TABLE wharf
 (
     latitude  NUMERIC(8, 6),
     longitude NUMERIC(9, 6),
-    FOREIGN KEY (latitude, longitude) REFERENCES location (latitude, longitude)
+    FOREIGN KEY (latitude, longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE
 );
 
 CREATE TABLE port
 (
     latitude  NUMERIC(8, 6),
     longitude NUMERIC(9, 6),
-    FOREIGN KEY (latitude, longitude) REFERENCES location (latitude, longitude)
+    FOREIGN KEY (latitude, longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE
 );
 
 CREATE TABLE person
@@ -86,7 +86,7 @@ CREATE TABLE boat
     id_owner       VARCHAR(20),
     iso_code_owner CHAR(2),
     PRIMARY KEY (cni, iso_code),
-    FOREIGN KEY (iso_code) REFERENCES country (iso_code),
+    FOREIGN KEY (iso_code) REFERENCES country (iso_code) ON DELETE CASCADE,
     FOREIGN KEY (id_owner, iso_code_owner) REFERENCES owner (id, iso_code) ON DELETE CASCADE
 );
 
@@ -116,9 +116,9 @@ CREATE TABLE reservation
     start_date      DATE,
     end_date        DATE,
     PRIMARY KEY (cni, iso_code_boat, id_sailor, iso_code_sailor, start_date, end_date),
-    FOREIGN KEY (cni, iso_code_boat) REFERENCES boat (cni, iso_code),
-    FOREIGN KEY (id_sailor, iso_code_sailor) REFERENCES sailor (id, iso_code),
-    FOREIGN KEY (start_date, end_date) REFERENCES schedule (start_date, end_date)
+    FOREIGN KEY (cni, iso_code_boat) REFERENCES boat (cni, iso_code) ON DELETE CASCADE,
+    FOREIGN KEY (id_sailor, iso_code_sailor) REFERENCES sailor (id, iso_code) ON DELETE CASCADE,
+    FOREIGN KEY (start_date, end_date) REFERENCES schedule (start_date, end_date) ON DELETE CASCADE
 );
 
 CREATE TABLE trip
@@ -137,7 +137,7 @@ CREATE TABLE trip
     end_longitude   NUMERIC(9, 6),
     PRIMARY KEY (date, cni, iso_code_boat, id_sailor, iso_code_sailor, start_date, end_date),
     FOREIGN KEY (cni, iso_code_boat, id_sailor, iso_code_sailor, start_date, end_date) REFERENCES
-        reservation (cni, iso_code_boat, id_sailor, iso_code_sailor, start_date, end_date),
+        reservation (cni, iso_code_boat, id_sailor, iso_code_sailor, start_date, end_date) ON DELETE CASCADE,
     FOREIGN KEY (start_latitude, start_longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE,
     FOREIGN KEY (end_latitude, end_longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE
 );
