@@ -39,8 +39,8 @@ from
     (
         trip join location l
         on trip.end_latitude = l.latitude and trip.end_longitude = l.longitude
-        where l.iso_code = 'PT' and end_date <= CURRENT_DATE -- check date?
     )
+    where l.iso_code = 'PT' and end_date <= CURRENT_DATE -- check date?
 )
 as sailor_locations
 group by id_sailor, iso_code_sailor

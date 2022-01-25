@@ -57,7 +57,7 @@ CREATE TABLE person
     name     VARCHAR(80) NOT NULL,
     iso_code CHAR(2),
     PRIMARY KEY (id, iso_code),
-    FOREIGN KEY (iso_code) REFERENCES country (iso_code)
+    FOREIGN KEY (iso_code) REFERENCES country (iso_code) ON DELETE CASCADE
 );
 
 CREATE TABLE sailor
@@ -65,7 +65,7 @@ CREATE TABLE sailor
     id       VARCHAR(20),
     iso_code CHAR(2),
     PRIMARY KEY (id, iso_code),
-    FOREIGN KEY (id, iso_code) REFERENCES person (id, iso_code)
+    FOREIGN KEY (id, iso_code) REFERENCES person (id, iso_code) ON DELETE CASCADE
 );
 
 CREATE TABLE owner
@@ -74,7 +74,7 @@ CREATE TABLE owner
     iso_code  CHAR(2),
     birthdate DATE NOT NULL,
     PRIMARY KEY (id, iso_code),
-    FOREIGN KEY (id, iso_code) REFERENCES person (id, iso_code)
+    FOREIGN KEY (id, iso_code) REFERENCES person (id, iso_code) ON DELETE CASCADE
 );
 
 CREATE TABLE boat
@@ -87,7 +87,7 @@ CREATE TABLE boat
     iso_code_owner CHAR(2),
     PRIMARY KEY (cni, iso_code),
     FOREIGN KEY (iso_code) REFERENCES country (iso_code),
-    FOREIGN KEY (id_owner, iso_code_owner) REFERENCES owner (id, iso_code)
+    FOREIGN KEY (id_owner, iso_code_owner) REFERENCES owner (id, iso_code) ON DELETE CASCADE
 );
 
 CREATE TABLE boat_vhf
@@ -96,7 +96,7 @@ CREATE TABLE boat_vhf
     cni      VARCHAR(15),
     iso_code CHAR(2),
     PRIMARY KEY (cni, iso_code),
-    FOREIGN KEY (cni, iso_code) REFERENCES boat (cni, iso_code)
+    FOREIGN KEY (cni, iso_code) REFERENCES boat (cni, iso_code) ON DELETE CASCADE
 );
 
 CREATE TABLE schedule
@@ -138,6 +138,6 @@ CREATE TABLE trip
     PRIMARY KEY (date, cni, iso_code_boat, id_sailor, iso_code_sailor, start_date, end_date),
     FOREIGN KEY (cni, iso_code_boat, id_sailor, iso_code_sailor, start_date, end_date) REFERENCES
         reservation (cni, iso_code_boat, id_sailor, iso_code_sailor, start_date, end_date),
-    FOREIGN KEY (start_latitude, start_longitude) REFERENCES location (latitude, longitude),
-    FOREIGN KEY (end_latitude, end_longitude) REFERENCES location (latitude, longitude)
+    FOREIGN KEY (start_latitude, start_longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE,
+    FOREIGN KEY (end_latitude, end_longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE
 );
