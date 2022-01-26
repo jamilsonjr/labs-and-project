@@ -8,4 +8,53 @@ Fazer lab-8 o da aula...
 - Confirmar onde por ficheiro utils.sql da applicação?
 - Confirmar onde posso usar Cascade (enunciado está pouco claro) ?! :( 
 
+Hash index is always secondary
+
+Octree indexes can be:
+
+Primary/Clustered index -> index and data are ordered in the same order -> When defining primary index - data is ordered accordingly to this indice (Can only be one)
+
+			-> Can be sparse or dense (dont mention in report)
+
+Secondary/Non-Clustered index -> do not
+				
+			      -> Is al always dense, porque nao tem ordem logo tem de la estar todos
+
+Indices compostos apenas com atributos da mesma tabela
+
+covering index - Que tem toda a informaçãoq ue quero extrair
+		- downsize é obvio, armazenamento e tempo de acesso do indice
+		- ideal quando há tabelas muito grande, i.e. com mais attributes
+
+optimizar condições individuais ou em conjunto (joins)~
+
+
+join algorithms
+
+table A  table B
+
+Nested Loop - Outer (sweep A) + inner (seerp B) - takes long, always work
+
+If B is ordered in the jon attr:
+
+Index Loop Join - Loop + Procura na ordernada primeiro elemento valido
+
+It A and B are ordered in the same way:
+
+Sorted Merge join - 1 on 1 comparisions.
+
+When B is small:
+
+Hash Join - Uses a hash function, that translate the rows of B in an hash table, and then applies the function to table A and check if in the hast table. If it is join.
+
+
+Em geral nao podemos dizer se é preferivel otimizar o join ou a seleção... precisamos da distribuição dos valores e tamanhos das tabelas.
+
+
+the more data you need the more important is order.
+
+We dont know hot to optimize text queries (with like)
+
+
+
 
