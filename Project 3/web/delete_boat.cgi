@@ -35,7 +35,7 @@ try:
     print('<p>Status: Delete completed sucessfully.</p>')
 
     # Connectivity to Page - Boat
-    print('<td><a href="boat.cgi"> < Go Back! </a></td>')
+    print('<td><a href="boat.cgi"> < List of Boats </a></td>')
 
     # Closing connection
     cursor.close()
@@ -45,6 +45,8 @@ except Exception as e:
     # Print errors on the webpage if they occur
     print('<p> Status: <b>Delete Failed</b>.')    
     print('<p>Description: {} </p>'.format(e))
+    # Connectivity to Page - Boat
+    print('<td><a href="boat.cgi"> < List of Boats </a></td>')
 
 finally:
     if connection is not None:

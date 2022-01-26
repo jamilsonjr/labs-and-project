@@ -81,6 +81,8 @@ except Exception as e:
     # Print errors on the webpage if they occur
     print('<p> Status: <b>Something went wrong</b>.')    
     print('<p> Description: {} </p>'.format(e))
+    # Connectivity to Home Page
+    print('<p> <a href="home.cgi"> < Home Page </a></p>')
 
 finally:
     if connection is not None:

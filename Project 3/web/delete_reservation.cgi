@@ -51,6 +51,8 @@ except Exception as e:
     # TO BE HANDLED
     print('<p> Status: <b>Delete Failed</b>.')    
     print('<p>Description: {} </p>'.format(e))
+    # Connectivity to Page - Reservation
+    print('<td><a href="reservation.cgi"> < List of Reservations </a></td>')
 
 finally:
     if connection is not None:

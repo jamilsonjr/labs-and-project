@@ -76,22 +76,6 @@ try:
         print('<option value="{}#@{}">{} ({})</option>'.format(iso[0],iso[1],iso[2],iso[1]))
 
     print('</select>')
-    # print('<br><br>')
-
-    # print('<label for="boat_owner_id">Owner ID:</label>')
-    # print('<select name="boat_owner_id" id="boat_owner_id">')
-    # for id in result:
-    #     print('<option value={}>{}</option>'.format(id[0],id[0]))
-    # print('</select>')
-
-    # print('<br><br>')
-
-    # print('<label for="boat_owner_iso_code">Owner Nationality (ISO Code):</label>')
-    # print('<select name="boat_owner_iso_code" id="boat_owner_iso_code">')
-    # for id in result:
-    #     print('<option value={}>{}</option>'.format(id[1],id[1]))
-    # print('</select>')
-
     
     print('<p>Boat MMSI (Optional): <input type="text" name="boat_mmsi"/></p>')
     # Submit and Close form
@@ -109,6 +93,8 @@ except Exception as e:
     # Print errors on the webpage if they occur
     print('<p> Status: <b>Something went wrong</b>.')    
     print('<p> Description: {} </p>'.format(e))
+    # Connectivity to Home Page
+    print('<p> <a href="home.cgi"> < Home Page </a></p>')
 
 finally:
     if connection is not None:

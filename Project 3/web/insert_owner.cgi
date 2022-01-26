@@ -92,6 +92,7 @@ except Exception as e:
     # Print errors on the webpage if they occur
     print('<p> Status: <b>Insert Failed</b>.')    
     print('<p> Description: {} </p>'.format(e))
+    print('<td><a href="owner.cgi"> < List of Owners </a></td>')
 
 finally:
     if connection is not None:

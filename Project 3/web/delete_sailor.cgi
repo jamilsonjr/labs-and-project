@@ -46,6 +46,7 @@ except Exception as e:
     # Print errors on the webpage if they occur
     print('<p> Status: <b>Delete Failed</b>.')    
     print('<p>Description: {} </p>'.format(e))
+    print('<td><a href="sailor.cgi"> < List of Sailors</a></td>')
 
 finally:
     if connection is not None:
