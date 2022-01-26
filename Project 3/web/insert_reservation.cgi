@@ -37,6 +37,13 @@ try:
     cursor = connection.cursor()
     # Page Header
     print('<h3>SQL LOG - INSERT RESERVATION:</h3>')
+
+    sql = 'START TRANSACTION;'
+    print('<p>Query: {}.</p>'.format(sql))
+    cursor.execute(sql)
+    connection.commit()
+    print('<p>Status: Transaction Open.</p>')
+
     # Create SQL Query
     sql = 'SELECT * FROM schedule where start_date = %s AND end_date = %s;'
     data = (start_date,end_date)
@@ -69,16 +76,27 @@ try:
     # New Reservation
     sql = 'INSERT INTO reservation VALUES (%s,%s,%s,%s,%s,%s);'
     data = (boat_cni,boat_iso_code,sailor_id,sailor_iso_code,start_date,end_date)
-    print('<p>Query Executed: {}</p>'.format(sql % data))
+    print('<p>Query: {}</p>'.format(sql % data))
 
     if len(result)==1 and result[0][0] == True:
         cursor.execute(sql, data)
         connection.commit()
         print('<p>Status: Insert completed sucessfully. </p>')
+        sql = 'COMMIT;'
+        print('<p>Query: {}.</p>'.format(sql))
+        cursor.execute(sql)
+        connection.commit()
+        print('<p>Status: Transaction concluded sucessfully.</p>')
     else:
         print('<p>Status: <b>Insert Failed.</b> Boat already booked for that period.</p>')
+        
+        sql = 'ROLLBACK;'
+        print('<p>Query: {}.</p>'.format(sql))
+        cursor.execute(sql)
+        connection.commit()
+        print('<p>Status: Transaction <b>cancelled</b> sucessfully.</p>')
         print('<p>Hint: Retry with a different boat or diferent dates.</p>')
-   
+
     # Connectivity to Page - Reservation
     print('<td><a href="reservation.cgi"> < List of Reservations </a></td>')
 
@@ -88,9 +106,14 @@ try:
 
 
 except Exception as e:
-    # Print errors on the webpage if they occur
-    print('<p> Status: <b>Insert Failed</b>.')    
-    print('<p> Description: {} </p>'.format(e))
+    print('<p> Status: <b>Insert Failed</b>.')
+    print('<p> Description: {} </p>'.format(e)) 
+    sql = 'ROLLBACK;'
+    print('<p>Query: {}.</p>'.format(sql))
+    cursor.execute(sql)
+    connection.commit()
+    print('<p>Status: Transaction <b>cancelled</b> sucessfully.</p>')
+    
     # Connectivity to Page - Reservation
     print('<td><a href="reservation.cgi"> < List of Reservations </a></td>')
 

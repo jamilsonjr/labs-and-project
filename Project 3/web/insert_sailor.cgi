@@ -23,50 +23,70 @@ try:
     cursor = connection.cursor()
 
     # Page Header
-    print('<h3>SQL LOG - INSERT SAILOR:</h3>')
+    print('<h3> SQL LOG - INSERT SAILOR:</h3>')
+
+    sql = 'START TRANSACTION;'
+    print('<p> Query: {}.</p>'.format(sql))
+    cursor.execute(sql)
+    connection.commit()
+    print('<p>Status: Transaction Open.</p>')
 
     # Create SQL Query
     sql = 'SELECT check_person(%s,%s);' #SQL Function (see IC.sql ot below)
     data = (sailor_id,sailor_iso_code)
-    print('<p>Query: {}</p>'.format(sql % data))
+    print('<p> Query: {}</p>'.format(sql % data))
     cursor.execute(sql,data)
     result = cursor.fetchall()
-    print('<p>Status: Query completed sucessfully. </p>')
+    print('<p> Status: Query completed sucessfully. </p>')
     num = len(result)
 
     # Run SQL Query 
     sql = 'INSERT INTO sailor VALUES (%s,%s);'
     data = (sailor_id, sailor_iso_code)
-    print('<p>Query: {}.</p>'.format(sql % data))
+    print('<p> Query: {}.</p>'.format(sql % data))
 
     if num == 1 and result[0][0] == True: # Execute if valid operation
 
         cursor.execute(sql, data)
         connection.commit()
-        print('<p>Status: Insert completed sucessfully. </p>')
+        print('<p> Status: Insert completed sucessfully. </p>')
 
     elif sailor_name != None:
-        print('<p>Status: Insert aborted...</p>')
+        print('<p> Status: Insert aborted...</p>')
         sql = 'INSERT INTO person VALUES (%s,%s,%s);'
         data = (sailor_id, sailor_name, sailor_iso_code)
-        print('<p>Query: {}.</p>'.format(sql % data))
+        print('<p> Query: {}.</p>'.format(sql % data))
         cursor.execute(sql, data)
         connection.commit()
-        print('<p>Status: Insert completed sucessfully.</p>')
+        print('<p> Status: Insert completed sucessfully.</p>')
 
         sql = 'INSERT INTO sailor VALUES (%s,%s);'
         data = (sailor_id, sailor_iso_code)
 
-        print('<p>Query Executed: {}</p>'.format(sql % data))
+        print('<p> Query: {}</p>'.format(sql % data))
         cursor.execute(sql, data)
         connection.commit()
    
-        print('<p>Status: Insert completed sucessfully.</p>')
+        print('<p> Status: Insert completed sucessfully.</p>')
+
+        sql = 'COMMIT;'
+        print('<p>Query: {}.</p>'.format(sql))
+        cursor.execute(sql)
+        connection.commit()
+        print('<p> Status: Transaction concluded sucessfully.</p>')
 
     else:
         # Person not Registered
-        print('<p> Status: <b>Insert Failed</b>. There is no person registered with credentials: {} , {}.'.format(sailor_id,sailor_iso_code))    
-        print('<p>Hint: Please fill the information below. </p>')
+        
+        print('<p> Status: <b>Insert Failed</b>. </p>')
+        print('<p> Description: <b> There is no person registered with credentials: {} , {}. </b>'.format(sailor_id,sailor_iso_code))    
+        
+        sql = 'ROLLBACK;'
+        print('<p>Query: {}.</p>'.format(sql))
+        cursor.execute(sql)
+        connection.commit()
+        print('<p>Status: Transaction <b>cancelled</b> sucessfully.</p>')
+        print('<p> Hint: Please fill the information below. </p>')
 
         print('<h3>Register new Person</h3>')
 
@@ -77,6 +97,7 @@ try:
         # Submite and Close Form
         print('<p><input type="submit" value="Register Person"/></p>')
 
+
     print('<td><a href="sailor.cgi"> < List of Sailors </a></td>')
     
     # Closing connection
@@ -85,8 +106,14 @@ try:
 
 except Exception as e:
     # Print errors on the webpage if they occur
+    
     print('<p> Status: <b>Insert Failed</b>.')    
-    print('<p> Description: {} </p>'.format(e))
+    print('<p> Description: <b>{}</b> </p>'.format(e))
+    sql = 'ROLLBACK;'
+    print('<p> Query: {}.</p>'.format(sql))
+    cursor.execute(sql)
+    connection.commit()
+    print('<p> Status: Transaction <b>cancelled</b> sucessfully.</p>')
     print('<td><a href="sailor.cgi"> < List of Sailors </a></td>')
 
 finally:

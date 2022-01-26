@@ -26,6 +26,13 @@ try:
     # Page Header
     print('<h3>SQL LOG - INSERT OWNER:</h3>')
 
+
+    sql = 'START TRANSACTION;'
+    print('<p>Query: {}.</p>'.format(sql))
+    cursor.execute(sql)
+    connection.commit()
+    print('<p>Status: Transaction Open.</p>')
+
     # Create and Run SQL Query
     sql = 'SELECT check_person(%s,%s);'
     data = (owner_id,owner_iso_code)
@@ -48,6 +55,7 @@ try:
 
     elif owner_name != None:
         print('<p>Status: Insert aborted...</p>')
+
         sql = 'INSERT INTO person VALUES (%s,%s,%s);'
         data = (owner_id, owner_name, owner_iso_code)
         print('<p>Query: {}.</p>'.format(sql % data))
@@ -63,11 +71,24 @@ try:
         connection.commit()
    
         print('<p>Status: Insert completed sucessfully. </p>')
+
+        sql = 'COMMIT;'
+        print('<p>Query: {}.</p>'.format(sql))
+        cursor.execute(sql)
+        connection.commit()
+        print('<p>Status: Transaction concluded sucessfully.</p>')
         
 
     else :
         # Person not Registered
-        print('<p> Status: <b>Insert Failed</b>. There is no person registered with credentials: {} , {}.'.format(owner_id,owner_iso_code))    
+        print('<p> Status: <b>Insert Failed</b>. There is no person registered with credentials: {} , {}.'.format(owner_id,owner_iso_code)) 
+
+        sql = 'ROLLBACK;'
+        print('<p>Query: <b>{}</b>.</p>'.format(sql))
+        cursor.execute(sql)
+        connection.commit()
+        print('<p> Status: Transaction <b>cancelled</b> sucessfully.')  
+
         print('<p>Hint: Please fill the information below. </p>')
         
         print('<h3>Register new Person</h3>')
@@ -91,7 +112,12 @@ try:
 except Exception as e:
     # Print errors on the webpage if they occur
     print('<p> Status: <b>Insert Failed</b>.')    
-    print('<p> Description: {} </p>'.format(e))
+    print('<p> Description: <b>{}</b> </p>'.format(e))
+    sql = 'ROLLBACK;'
+    print('<p>Query: {}.</p>'.format(sql))
+    cursor.execute(sql)
+    connection.commit()
+    print('<p> Status: Transaction <b>cancelled</b> sucessfully.</p>')  
     print('<td><a href="owner.cgi"> < List of Owners </a></td>')
 
 finally:
