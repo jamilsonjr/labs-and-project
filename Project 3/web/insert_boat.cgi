@@ -8,9 +8,11 @@ boat_name = form.getvalue('boat_name')
 boat_year = form.getvalue('boat_year')
 boat_cni = form.getvalue('boat_cni')
 boat_iso_code = form.getvalue('boat_iso_code')
-boat_owner_id = form.getvalue('boat_owner_id')
-boat_owner_iso_code = form.getvalue('boat_owner_iso_code')
+boat_owner= form.getvalue('boat_owner')
 boat_mmsi = form.getvalue('boat_mmsi')
+
+if boat_owner != None:
+    boat_owner_id,boat_owner_iso_code = boat_owner.split('#@')
 
 # Initizalize HTML
 print('Content-type:text/html\n\n')
@@ -55,8 +57,8 @@ try:
 
 except Exception as e:
     # Print errors on the webpage if they occur
-    print('<h1>An error occurred.</h1>')
-    print('<p>{}</p>'.format(e))
+    print('<p> Status: <b>Insert Failed</b>.')    
+    print('<p> Description: {} </p>'.format(e))
 
 finally:
     if connection is not None:

@@ -120,4 +120,61 @@ create trigger tg_verify_country_location
     for each row execute procedure check_location();
  -- Works nicely!!
 
--- trigger for deleting
+-- Auxiliar Functions to WEB
+
+drop function if exists check_person(owner_id varchar, owner_iso_code char);
+create function check_person(owner_id varchar(80),owner_iso_code char(2))
+returns bool
+language plpgsql
+  as
+$$
+
+    BEGIN
+        If exists (SELECT * FROM person WHERE id = owner_id AND iso_code = owner_iso_code) then
+            return true;
+        else
+            return false;
+        end if;
+    END
+$$;
+
+drop type if exists reservation_interval;
+create type reservation_interval as (
+    start_date date,
+    end_date date
+);
+drop function if exists  check_reservation_web(boat_cni varchar, boat_iso_code varchar, start_date date, end_date date);
+create or replace function check_reservation_web(boat_cni varchar(60),boat_iso_code varchar(2),start_date date, end_date date)
+returns bool
+language plpgsql
+  as
+$$
+    declare
+        res_int reservation_interval default null;
+    declare
+        cursor_boat cursor for
+        (select r.start_date,r.end_date
+        from reservation r
+        where r.cni = boat_cni and r.iso_code_boat = boat_iso_code);
+
+    BEGIN
+        open cursor_boat;
+
+        Loop -- verifies if the dates intersect
+            fetch cursor_boat into res_int;
+
+            if res_int is null then
+                exit;
+            end if;
+
+            if ((start_date between res_int.start_date and res_int.end_date)
+                or (end_date between  res_int.start_date and res_int.end_date)
+                or (start_date <= res_int.start_date and end_date >= res_int.end_date)) then
+                return false;
+            end if;
+
+        end loop;
+        close cursor_boat;
+        return true;
+    END
+$$;

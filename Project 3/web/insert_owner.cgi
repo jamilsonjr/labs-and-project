@@ -29,8 +29,10 @@ try:
     # Create and Run SQL Query
     sql = 'SELECT check_person(%s,%s);'
     data = (owner_id,owner_iso_code)
+    print('<p>Query: {}</p>'.format(sql % data))
     cursor.execute(sql,data)
     result = cursor.fetchall()
+    print('<p>Status: Query completed sucessfully. </p>')
     num = len(result)
 
     sql = 'INSERT INTO owner VALUES (%s,%s,%s);'
@@ -88,9 +90,8 @@ try:
 
 except Exception as e:
     # Print errors on the webpage if they occur
-    print('<h1>An error occurred.</h1>')
-    print('<p>{}</p>'.format(e))
-    print('<p>{}</p>'.format(e))
+    print('<p> Status: <b>Insert Failed</b>.')    
+    print('<p> Description: {} </p>'.format(e))
 
 finally:
     if connection is not None:

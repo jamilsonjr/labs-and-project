@@ -49,8 +49,8 @@ try:
 
 except Exception as e:
     # TO BE HANDLED
-    print('<h1>An error occurred.</h1>')
-    print('<p>{}</p>'.format(e))
+    print('<p> Status: <b>Delete Failed</b>.')    
+    print('<p>Description: {} </p>'.format(e))
 
 finally:
     if connection is not None:

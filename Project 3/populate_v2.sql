@@ -16,6 +16,9 @@ INSERT INTO Country VALUES('https://www.worldometers.info/img/flags/ch-flag.gif'
                             'CN');
 -- Location table INSERTS
 -- PT locations
+
+START TRANSACTION;
+
 INSERT INTO location VALUES('Belem', 38.694664, -9.204000,'PT');
 INSERT INTO location VALUES('Parque das Naçoes', 38.754363, -9.093657,'PT');
 INSERT INTO location VALUES('Cascais', 38.692304, -9.418579,'PT');
@@ -36,6 +39,8 @@ INSERT INTO wharf VALUES(-33.800334, 18.377103); -- Murray Bay
 -- Port table INSERTS
 INSERT INTO port VALUES(38.694664, -9.204000);   -- Belem
 INSERT INTO port VALUES(-22.947632, -43.173545); -- Botafogo
+
+COMMIT;
 
 -- Person table INSERTS
 INSERT INTO person VALUES ('111','Joao','PT');

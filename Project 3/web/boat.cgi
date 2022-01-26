@@ -64,24 +64,33 @@ try:
     print('</select>')
 
     print('<br><br>')
-
-    sql = 'SELECT id,iso_code FROM owner;'
+   
+    sql = 'SELECT id,iso_code,name FROM owner NATURAL JOIN person;'
     cursor.execute(sql)
     result = cursor.fetchall()
 
-    print('<label for="boat_owner_id">Owner ID:</label>')
-    print('<select name="boat_owner_id" id="boat_owner_id">')
-    for id in result:
-        print('<option value={}>{}</option>'.format(id[0],id[0]))
-    print('</select>')
+    print('<label for="boat_owner">Owner:</label>')
+    print('<select name="boat_owner" id="boat_owner">')
 
-    print('<br><br>')
+    for iso in result:
+        print('<option value="{}#@{}">{} ({})</option>'.format(iso[0],iso[1],iso[2],iso[1]))
 
-    print('<label for="boat_owner_iso_code">Owner Nationality (ISO Code):</label>')
-    print('<select name="boat_owner_iso_code" id="boat_owner_iso_code">')
-    for id in result:
-        print('<option value={}>{}</option>'.format(id[1],id[1]))
     print('</select>')
+    # print('<br><br>')
+
+    # print('<label for="boat_owner_id">Owner ID:</label>')
+    # print('<select name="boat_owner_id" id="boat_owner_id">')
+    # for id in result:
+    #     print('<option value={}>{}</option>'.format(id[0],id[0]))
+    # print('</select>')
+
+    # print('<br><br>')
+
+    # print('<label for="boat_owner_iso_code">Owner Nationality (ISO Code):</label>')
+    # print('<select name="boat_owner_iso_code" id="boat_owner_iso_code">')
+    # for id in result:
+    #     print('<option value={}>{}</option>'.format(id[1],id[1]))
+    # print('</select>')
 
     
     print('<p>Boat MMSI (Optional): <input type="text" name="boat_mmsi"/></p>')
@@ -98,8 +107,8 @@ try:
 
 except Exception as e:
     # Print errors on the webpage if they occur
-    print('<h1>An error occurred.</h1>')
-    print('<p>{}</p>'.format(e))
+    print('<p> Status: <b>Something went wrong</b>.')    
+    print('<p> Description: {} </p>'.format(e))
 
 finally:
     if connection is not None:
