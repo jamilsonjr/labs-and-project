@@ -1,12 +1,12 @@
 -- Analytics queries
 -- The start date (i.e., per year, per month independently of year, and per exact date);
 -- GROUPING SETS -> ((year), (month), ())
-SELECT EXTRACT(YEAR FROM trip_start_date) AS year, EXTRACT(MONTH FROM trip_start_date) AS month, COUNT(*)
+SELECT trip_start_date as DATE, EXTRACT(YEAR FROM trip_start_date) AS year, EXTRACT(MONTH FROM trip_start_date) AS month, COUNT(*)
 FROM trip_info
 GROUP BY GROUPING SETS (
   (EXTRACT(YEAR FROM trip_start_date)),
   (EXTRACT(MONTH FROM trip_start_date)),
-    ());
+  (trip_start_date));
 
 -- The location of origin (i.e., per location within countries, per country, and in total).
 -- GROUPING SETS -> ((contries, location), (country), ()) aka roullup
