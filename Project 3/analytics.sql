@@ -12,4 +12,4 @@ GROUP BY GROUPING SETS (
 -- GROUPING SETS -> ((contries, location), (country), ()) aka roullup
 SELECT country_name_origin, loc_name_origin, COUNT(*)
 FROM trip_info
-GROUP BY ROLLUP(country_name_origin, loc_name_origin)
+GROUP BY ROLLUP(country_name_origin, loc_name_origin)\

@@ -1,3 +1,78 @@
+--Alter Tables
+ALTER TABLE location
+DROP CONSTRAINT location_iso_code_fk,
+ADD CONSTRAINT location_iso_code_fk
+FOREIGN KEY (iso_code) REFERENCES country (iso_code) ON DELETE CASCADE;
+
+
+ALTER TABLE marina
+DROP CONSTRAINT marina_latitude_fkey,
+ADD CONSTRAINT marina_latitude_fkey
+FOREIGN KEY (latitude, longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE;
+
+ALTER TABLE wharf
+DROP CONSTRAINT wharf_latitude_fkey,
+ADD CONSTRAINT wharf_latitude_fkey
+FOREIGN KEY (latitude, longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE;
+
+ALTER TABLE port
+DROP CONSTRAINT port_latitude_fkey,
+ADD CONSTRAINT port_latitude_fkey
+FOREIGN KEY (latitude, longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE;
+
+ALTER TABLE person
+DROP CONSTRAINT person_iso_code_fkey,
+ADD CONSTRAINT person_iso_code_fkey
+FOREIGN KEY (iso_code) REFERENCES country (iso_code) ON DELETE CASCADE;
+
+ALTER TABLE sailor
+DROP CONSTRAINT sailor_id_fkey,
+ADD CONSTRAINT sailor_id_fkey
+FOREIGN KEY (id, iso_code) REFERENCES person (id, iso_code) ON DELETE CASCADE;
+
+ALTER TABLE owner
+DROP CONSTRAINT owner_id_fkey,
+ADD CONSTRAINT owner_id_fkey
+FOREIGN KEY (id, iso_code) REFERENCES person (id, iso_code) ON DELETE CASCADE;
+
+ALTER TABLE boat
+DROP CONSTRAINT boat_id_owner_fkey,
+DROP CONSTRAINT boat_iso_code_fkey,
+ADD CONSTRAINT boat_id_owner_fkey
+    FOREIGN KEY (id_owner, iso_code_owner) REFERENCES owner (id, iso_code) ON DELETE CASCADE,
+ADD CONSTRAINT boat_iso_code_fkey
+    FOREIGN KEY (iso_code) REFERENCES country (iso_code) ON DELETE CASCADE;
+
+ALTER TABLE boat_vhf
+DROP CONSTRAINT boat_vhf_cni_fkey,
+ADD CONSTRAINT boat_vhf_cni_fkey
+    FOREIGN KEY (cni, iso_code) REFERENCES boat (cni, iso_code);
+
+
+ALTER TABLE reservation
+DROP CONSTRAINT reservation_cni_fkey,
+DROP CONSTRAINT reservation_id_sailor_fkey,
+DROP CONSTRAINT reservation_start_date_fkey,
+ADD CONSTRAINT reservation_cni_fkey
+    FOREIGN KEY (cni, iso_code_boat) REFERENCES boat (cni, iso_code) ON DELETE CASCADE,
+ADD CONSTRAINT reservation_id_sailor_fkey
+    FOREIGN KEY (id_sailor, iso_code_sailor) REFERENCES sailor (id, iso_code) ON DELETE CASCADE,
+ADD CONSTRAINT reservation_start_date_fkey
+    FOREIGN KEY (start_date, end_date) REFERENCES schedule (start_date, end_date) ON DELETE CASCADE;
+
+ALTER TABLE trip
+DROP CONSTRAINT trip_cni_fkey,
+DROP CONSTRAINT trip_end_latitude_fkey,
+DROP CONSTRAINT trip_start_latitude_fkey,
+ADD CONSTRAINT trip_cni_fkey
+    FOREIGN KEY (cni, iso_code_boat, id_sailor, iso_code_sailor, start_date, end_date) REFERENCES
+        reservation (cni, iso_code_boat, id_sailor, iso_code_sailor, start_date, end_date) ON DELETE CASCADE,
+ADD CONSTRAINT trip_end_latitude_fkey
+    FOREIGN KEY (start_latitude, start_longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE,
+ADD CONSTRAINT trip_start_latitude_fkey
+    FOREIGN KEY (end_latitude, end_longitude) REFERENCES location (latitude, longitude) ON DELETE CASCADE;
+
+
 /*INTEGRITY CONSTRAINTS*/
 --(IC-1) Two reservations for the same boat can not have their corresponding date intervals intersecting.
 drop type if exists reservation_interval;
