@@ -21,7 +21,7 @@ try:
     cursor = connection.cursor()
 
     # Page Header
-    print('<h3>List of Reservation</h3>')
+    print('<h3>List of Reservations</h3>')
 
     # Create and Run SQL Query
     sql = 'SELECT b.name, b.cni, b.iso_code, p.name, r.id_sailor, r.iso_code_sailor, r.start_date, r.end_date FROM reservation r natural join boat b join person p on r.id_sailor = p.id AND r.iso_code_sailor = p.iso_code;'

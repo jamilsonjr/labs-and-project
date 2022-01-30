@@ -1,3 +1,4 @@
+DROP VIEW IF EXISTS trip_info;
 DROP TABLE IF EXISTS trip;
 DROP TABLE IF EXISTS reservation;
 DROP TABLE IF EXISTS schedule;

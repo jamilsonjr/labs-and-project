@@ -1,3 +1,18 @@
+-- Delete all records in each of the existing tables
+DELETE FROM trip;
+DELETE FROM reservation;
+DELETE FROM schedule;
+DELETE FROM boat_vhf;
+DELETE FROM boat;
+DELETE FROM owner;
+DELETE FROM sailor;
+DELETE FROM person;
+DELETE FROM port;
+DELETE FROM wharf;
+DELETE FROM marina;
+DELETE FROM location;
+DELETE FROM country;
+
 -- Country table INSERTS
 INSERT INTO Country VALUES('https://www.worldometers.info/img/flags/br-flag.gif',
                            'Brazil',
@@ -71,6 +86,11 @@ INSERT INTO boat VALUES('Xangai',2020,'BRZ 3','BR','444','CN');
 --Boats in ZF
 INSERT INTO boat VALUES('Jameson',1984,'South-B1','ZF','111','PT');
 INSERT INTO boat VALUES('Hong Kong',1985,'South-B2','ZF','444','CN');
+
+-- Boat with VHF
+INSERT INTO boat_vhf VALUES(156846953,'NRP 1','PT');
+INSERT INTO boat_vhf VALUES(459863215,'NRP 2','PT');
+INSERT INTO boat_vhf VALUES(578965523,'BRZ 3','BR');
 
 -- Schedules
 -- monthly (Jan - May)

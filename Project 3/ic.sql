@@ -1,9 +1,10 @@
---Alter Tables
-ALTER TABLE location
-DROP CONSTRAINT location_iso_code_fk,
-ADD CONSTRAINT location_iso_code_fk
-FOREIGN KEY (iso_code) REFERENCES country (iso_code) ON DELETE CASCADE;
+-- To see the ICs, please go to line 76.
 
+-- Alter Tables to deal with on delete cascade
+ALTER TABLE location
+DROP CONSTRAINT location_iso_code_fkey,
+ADD CONSTRAINT location_iso_code_fkey
+FOREIGN KEY (iso_code) REFERENCES country (iso_code) ON DELETE CASCADE;
 
 ALTER TABLE marina
 DROP CONSTRAINT marina_latitude_fkey,
@@ -46,8 +47,7 @@ ADD CONSTRAINT boat_iso_code_fkey
 ALTER TABLE boat_vhf
 DROP CONSTRAINT boat_vhf_cni_fkey,
 ADD CONSTRAINT boat_vhf_cni_fkey
-    FOREIGN KEY (cni, iso_code) REFERENCES boat (cni, iso_code);
-
+    FOREIGN KEY (cni, iso_code) REFERENCES boat (cni, iso_code) ON DELETE CASCADE;
 
 ALTER TABLE reservation
 DROP CONSTRAINT reservation_cni_fkey,
@@ -74,6 +74,7 @@ ADD CONSTRAINT trip_start_latitude_fkey
 
 
 /*INTEGRITY CONSTRAINTS*/
+
 --(IC-1) Two reservations for the same boat can not have their corresponding date intervals intersecting.
 drop type if exists reservation_interval;
 create type reservation_interval as (
@@ -124,8 +125,8 @@ create trigger tg_verify_reservation_dates
     before insert on reservation
     for each row execute procedure check_reservation();
 
+
 -- (IC-2) Any location must be specialized in one of three - disjoint - entities: marina, wharf, or port.
--- Loop between must specialize and fk_constraint
 CREATE OR REPLACE FUNCTION check_location_type_fn()
 RETURNS TRIGGER LANGUAGE plpgsql 
 AS
@@ -166,6 +167,7 @@ CREATE TRIGGER chk_location_type_wharf
 BEFORE INSERT ON wharf
 FOR EACH ROW EXECUTE PROCEDURE check_location_type_fn();
 
+
 -- (IC-3) A country where a boat is registered must correspond - at least - to one location.
 create or replace function check_location()
 returns trigger
@@ -196,8 +198,10 @@ create trigger tg_verify_country_location
     for each row execute procedure check_location();
  -- Works nicely!!
 
--- Auxiliar Functions to WEB
+/*************************************************** AUXILIAR FUNCTIONS ***********************************************/
+-- Used in the WEBPAGE (see report)
 
+-- Function 1: Verify if owner/sailor is in person database (returns boolean)
 drop function if exists check_person(owner_id varchar, owner_iso_code char);
 create function check_person(owner_id varchar(80),owner_iso_code char(2))
 returns bool
@@ -219,6 +223,8 @@ create type reservation_interval as (
     start_date date,
     end_date date
 );
+
+-- Function 2: Verify the availability of the boat for a given time period (returns boolean)
 drop function if exists  check_reservation_web(boat_cni varchar, boat_iso_code varchar, start_date date, end_date date);
 create or replace function check_reservation_web(boat_cni varchar(60),boat_iso_code varchar(2),start_date date, end_date date)
 returns bool
