@@ -83,8 +83,8 @@ create type reservation_interval as (
 
 create or replace function check_reservation()
 returns trigger
-language plpgsql
-  as
+language plpgsql 
+AS
 $$
     declare
         res_int reservation_interval default null;
@@ -127,7 +127,8 @@ create trigger tg_verify_reservation_dates
 -- (IC-2) Any location must be specialized in one of three - disjoint - entities: marina, wharf, or port.
 -- Loop between must specialize and fk_constraint
 CREATE OR REPLACE FUNCTION check_location_type_fn()
-RETURNS TRIGGER LANGUAGE plpgsql AS
+RETURNS TRIGGER LANGUAGE plpgsql 
+AS
     $$
         BEGIN
             IF EXISTS(
